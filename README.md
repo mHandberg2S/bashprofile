@@ -29,13 +29,22 @@ Runs the git_append custom function. Looks for Jira Ticket number at start of br
 
 ### Terraform
 - tf
+
 Alias for "terraform"
+
 - tfi
+
 Runs "terraform init"
+
 - tfp
+
 Runs "terraform plan
+
 - tffmt
+
 Runs "terraform fmt"
+
 - tfa
+
 Checks what your current AWS caller identity is and runs "terraform plan" if your caller identity is your allowed account ID. NB! Before use remember to update the AWS Account ID in the "tfa" function, line 37.
 
