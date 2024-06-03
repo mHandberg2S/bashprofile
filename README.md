@@ -17,34 +17,36 @@ Custom Bash profile with the following prompt:
 ## Functions and aliases
 
 ### aws
-- awsprofile:
+#### awsprofile
+
 Interactive prompt to select between available AWS CLIv2 profiles.
 
-- awsi
-Runs the "aws sts get-caller-identity" command
+#### awsi
+
+Runs "aws sts get-caller-identity"
 
 ### Git
-- gc
+#### gc
 Runs the git_append custom function. Looks for Jira Ticket number at start of branch name and prepends it to your commit message. Example "gc -a "my message" gives commit message: "scp-1234/my message"
 
 ### Terraform
-- tf
+#### tf
 
 Alias for "terraform"
 
-- tfi
+#### tfi
 
 Runs "terraform init"
 
-- tfp
+#### tfp
 
-Runs "terraform plan
+Runs "terraform plan"
 
-- tffmt
+#### tffmt
 
 Runs "terraform fmt"
 
-- tfa
+#### tfa
 
-Checks what your current AWS caller identity is and runs "terraform plan" if your caller identity is your allowed account ID. NB! Before use remember to update the AWS Account ID in the "tfa" function, line 37.
+Checks what your current AWS caller identity is and runs "terraform apply --auto-approve" if your caller identity is your allowed account ID. NB! Before use remember to update the AWS Account ID in the "tfa" function, line 37.
 
