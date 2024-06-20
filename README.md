@@ -50,3 +50,4 @@ Runs "terraform fmt"
 
 Checks what your current AWS caller identity is and runs "terraform apply --auto-approve" if your caller identity is your allowed account ID. NB! Before use remember to update the AWS Account ID in the "tfa" function, line 37.
 
+# Dummy update
