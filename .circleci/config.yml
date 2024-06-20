@@ -9,6 +9,25 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run:
+          name: "Check PR Title"
+          command: |
+            #!/bin/bash
+            # Extract PR number from the CIRCLE_PULL_REQUEST URL
+            PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | grep -o '[^/]*$')
+            
+            # Fetch the PR details using the GitHub API
+            PR_TITLE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls/$PR_NUMBER" \
+              | jq -r .title)
+
+            # Check if the PR title starts with the required pattern
+            if [[ $PR_TITLE =~ ^SCP-[0-9]{4} ]]; then
+              echo "PR title '$PR_TITLE' is valid."
+            else
+              echo "PR title '$PR_TITLE' is invalid. It must start with 'SCP-' followed by 4 digits."
+              exit 1
+            fi
 
 workflows:
   say-hello-workflow:
