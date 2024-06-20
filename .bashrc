@@ -18,9 +18,6 @@ $(get_venv_prompt)\
 PROMPT_COMMAND=update_prompt
 
 
-
-PROMPT_COMMAND=update_prompt
-
 alias tf="terraform"
 alias tfi="terraform init"
 alias tfp="terraform plan"
