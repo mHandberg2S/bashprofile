@@ -20,4 +20,8 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
+      - say-hello:
+          filters:
+            branches:
+              ignore:
+                - main
