@@ -14,7 +14,7 @@ jobs:
           command: |
             #!/bin/bash
             # Extract PR number from the CIRCLE_PULL_REQUEST URL
-            echo $CIRCLE_PULL_REQUEST
+            echo $CIRCLE_BRANCH
             
 
 workflows:
