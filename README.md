@@ -46,6 +46,10 @@ Runs "terraform plan"
 
 Runs "terraform fmt"
 
+#### tfdoc
+
+Injects Terraform Docs in README.md. Requires Terraform Docs to be installed.
+
 #### tfa
 
 Checks what your current AWS caller identity is and runs "terraform apply --auto-approve" if your caller identity is your allowed account ID. NB! Before use remember to update the AWS Account ID in the "tfa" function, line 37.

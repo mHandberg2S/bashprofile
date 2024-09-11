@@ -5,6 +5,7 @@ get_venv_prompt() {
     fi
 }
 
+
 # Update the prompt
 update_prompt() {
     PS1="\[\e[31m\]$(get_aws_profile_prompt)\[\e[m\]\
@@ -17,24 +18,24 @@ $(get_venv_prompt)\
 # Apply the prompt update function
 PROMPT_COMMAND=update_prompt
 
-
-
-PROMPT_COMMAND=update_prompt
+alias code='open -a "Visual Studio Code"' # open file or folder in VSCode e.g. code ~/.zshrc
 
 alias tf="terraform"
 alias tfi="terraform init"
 alias tfp="terraform plan"
 alias tffmt="terraform fmt"
+alias tfdoc='terraform-docs markdown table --output-file README.md --output-mode inject .'
 alias cbashrc="code ~/.bashrc"
 alias sbashrc="source ~/.bashrc"
 alias gc='git_append'
+alias aws2='aws --profile $(aws configure get default.profile 2>/dev/null)'
 alias awsi="aws sts get-caller-identity"
 tfa() {
     # Get the AWS account ID using aws sts get-caller-identity
     account_id=$(aws sts get-caller-identity --query 'Account' --output text)
 
     # Check if AWS CLI v2 profile is set to a specific account ID
-    if [[ $account_id == "1" ]]; then
+    if [[ $account_id == "000" ]]; then
 
             # Run terraform apply with auto-approval
             terraform apply --auto-approve
@@ -42,6 +43,7 @@ tfa() {
         echo "AWS CLI is not set to the specific account ID." 
     fi
 }
+
 
 export AWS_PROFILE=$(aws configure get default.profile 2>/dev/null)
 
