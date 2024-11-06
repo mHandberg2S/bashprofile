@@ -3,6 +3,7 @@
 
 ## Prereqs:
 - AWS CLI v2
+- - CLI Profiles
 - Git
 - fzf
 - Some commands require Terraform
@@ -20,6 +21,7 @@ Custom Bash profile with the following prompt:
 #### awsprofile
 
 Interactive prompt to select between available AWS CLIv2 profiles.
+I recommend using SSO profiles.
 
 #### awsi
 
