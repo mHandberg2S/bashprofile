@@ -31,6 +31,9 @@ Runs "aws sts get-caller-identity"
 #### gc
 Runs the git_append custom function. Looks for Jira Ticket number at start of branch name and prepends it to your commit message. Example "gc -a "my message" gives commit message: "scp-1234/my message"
 
+#### gbranch
+Gets branches for the repository and lets you interactively select one to check out.
+
 ### Terraform
 #### tf
 
