@@ -33,7 +33,7 @@ tfa() {
     account_id=$(aws sts get-caller-identity --query 'Account' --output text)
 
     # Check if AWS CLI v2 profile is set to a specific account ID
-    if [[ $account_id == "123" ]]; then
+    if [[ $account_id == "767397779353" ]]; then
 
             # Run terraform apply with auto-approval
             terraform apply --auto-approve
@@ -64,6 +64,29 @@ function awsprofile() {
   else
     echo "No profile selected."
   fi
+}
+
+function gbranch() {
+  # Check if the current directory is a Git repository
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Not a Git repository!"
+    return 1
+  fi
+
+  # Use git branch to get a list of branches, send it to fzf for selection
+  local branch
+  branch=$(git branch --all --color=always | \
+    fzf --ansi --preview="git log --color=always -n 5 --pretty=format:'%s' {1}" | \
+    sed -E 's/^.* -> //; s/^..//; s#remotes/[^/]+/##')
+
+  # If no branch was selected, exit the function
+  if [[ -z "$branch" ]]; then
+    echo "No branch selected."
+    return 1
+  fi
+
+  # Check out the selected branch
+  git switch "$branch"
 }
 
 function git_append {
