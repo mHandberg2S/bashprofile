@@ -86,7 +86,7 @@ function gbranch() {
   fi
 
   # Check out the selected branch
-  git checkout "$branch"
+  git switch "$branch"
 }
 
 function git_append {
