@@ -75,7 +75,7 @@ function gbranch() {
 
   # Use git branch to get a list of branches, send it to fzf for selection
   local branch
-  branch=$(git branch --all --color=always | \
+  branch=$(git remote prune origin && git branch -a --color=always | \
     fzf --ansi --preview="git log --color=always -n 5 --pretty=format:'%s' {1}" | \
     sed -E 's/^.* -> //; s/^..//; s#remotes/[^/]+/##')
 
