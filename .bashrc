@@ -66,7 +66,7 @@ function awsprofile() {
   fi
 }
 
-function gbranch() {
+function gswtich() {
   # Check if the current directory is a Git repository
   if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "Not a Git repository!"
