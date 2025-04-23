@@ -28,12 +28,24 @@ alias cbashrc="code ~/.bashrc"
 alias sbashrc="source ~/.bashrc"
 alias gc='git_append'
 alias awsi="aws sts get-caller-identity"
+
+gpr() {
+    # Create commit prefix based on branch name
+  commit_prefix=$(git symbolic-ref --short HEAD | awk -F '-' '{print $1"-"$2}')
+
+  gh pr create \
+    --assignee "@me" \
+    --base $1 \
+    --title "$commit_prefix/$2" \
+    --draft
+}
+
 tfa() {
     # Get the AWS account ID using aws sts get-caller-identity
     account_id=$(aws sts get-caller-identity --query 'Account' --output text)
 
     # Check if AWS CLI v2 profile is set to a specific account ID
-    if [[ $account_id == "767397779353" ]]; then
+    if [[ $account_id == "0" ]]; then
 
             # Run terraform apply with auto-approval
             terraform apply --auto-approve
@@ -66,7 +78,8 @@ function awsprofile() {
   fi
 }
 
-function gswtich() {
+function gswitch() {
+
   # Check if the current directory is a Git repository
   if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "Not a Git repository!"
