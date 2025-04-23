@@ -79,6 +79,7 @@ function awsprofile() {
 }
 
 function gswitch() {
+
   # Check if the current directory is a Git repository
   if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "Not a Git repository!"
