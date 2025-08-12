@@ -7,7 +7,8 @@
 - Git
 - - Github Cli
 - fzf
-- Some commands require Terraform
+- Terraform
+- - Terraform Docs
 
 ## Description
 
