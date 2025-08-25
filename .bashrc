@@ -28,6 +28,21 @@ alias cbashrc="code ~/.bashrc"
 alias sbashrc="source ~/.bashrc"
 alias gc='git_append'
 alias awsi="aws sts get-caller-identity"
+tfa() {
+    # Get the AWS account ID using aws sts get-caller-identity
+    account_id=$(aws sts get-caller-identity --query 'Account' --output text)
+
+    # Check if AWS CLI v2 profile is set to a specific account ID
+    if [[ $account_id == "INSERT-AWS-ACCOUNT-ID-HERE" ]]; then
+
+            # Run terraform apply with auto-approval
+            terraform apply --auto-approve
+    else
+        echo "AWS CLI is not set to the specific account ID." 
+    fi
+}
+
+export AWS_PROFILE=$(aws configure get default.profile 2>/dev/null)
 
 gpr() {
     # Create commit prefix based on branch name
@@ -40,23 +55,7 @@ gpr() {
     --draft
 }
 
-tfa() {
-    # Get the AWS account ID using aws sts get-caller-identity
-    account_id=$(aws sts get-caller-identity --query 'Account' --output text)
-
-    # Check if AWS CLI v2 profile is set to a specific account ID
-    if [[ $account_id == "0" ]]; then
-
-            # Run terraform apply with auto-approval
-            terraform apply --auto-approve
-    else
-        echo "AWS CLI is not set to the specific account ID." 
-    fi
-}
-
-export AWS_PROFILE=$(aws configure get default.profile 2>/dev/null)
-
-function awsprofile() {
+function awsp() {
   # Get the list of profiles excluding "default"
   profiles=$(aws configure list-profiles | grep -v '^default$')
 
@@ -79,7 +78,6 @@ function awsprofile() {
 }
 
 function gswitch() {
-
   # Check if the current directory is a Git repository
   if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     echo "Not a Git repository!"
@@ -126,4 +124,52 @@ get_aws_profile_prompt() {
 function parse_git_branch() {
 	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
     echo "[${BRANCH}]"
+}
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - bash)"
+
+# Override terraform command to intercept apply operations
+terraform() {
+    local cmd="$1"
+    
+    # Check if this is an apply command (including variations)
+    if [[ "$cmd" =~ ^apply$ ]] || [[ "$*" =~ terraform[[:space:]]+apply ]] || [[ "$*" =~ ^apply ]]; then
+        
+        # Define allowed account IDs - MODIFY THESE TO YOUR ACTUAL ACCOUNT IDS
+        local allowed_accounts=("INSERT-AWS-ACCOUNT-ID-HERE")
+        
+        # Get current AWS account ID
+        local current_account
+        current_account=$(aws sts get-caller-identity --query Account --output text 2>/dev/null)
+        
+        if [[ $? -ne 0 ]] || [[ -z "$current_account" ]]; then
+            echo "🚫 BLOCKED: Unable to determine current AWS account ID"
+            echo "💡 Make sure AWS CLI is configured and you're authenticated"
+            return 1
+        fi
+        
+        # Check if current account is in allowed list
+        local account_allowed=false
+        for allowed in "${allowed_accounts[@]}"; do
+            if [[ "$current_account" == "$allowed" ]]; then
+                account_allowed=true
+                break
+            fi
+        done
+        
+        if [[ "$account_allowed" == false ]]; then
+            echo "🚫 BLOCKED: Current AWS account '$current_account' is not in the allowed list"
+            echo "📋 Allowed accounts: ${allowed_accounts[*]}"
+            echo "💡 To allow this account, add it to the allowed_accounts array in your shell profile"
+            return 1
+        fi
+        
+        echo "✅ Account '$current_account' verified. Running terraform apply..."
+        command terraform "$@"
+    else
+        # For non-apply commands, pass through normally
+        command terraform "$@"
+    fi
 }
